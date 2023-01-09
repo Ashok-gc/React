@@ -1,32 +1,50 @@
-// import { useState } from 'react';
-import './App.css';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-// import Feedback_app  from './components/Feedback_app';
-import History_app from './components/History_app';
+function App(props) {
 
+  // const {notes}= props.notes
+  const [newNote, setNewNote]=useState('')
+  const [notes, setNotes]= useState([])
 
-function App({name,age}) {
+  useEffect(()=>{
+    axios.get('http://localhost:3001/notes')
+    .then((response)=>{
+      console.log(response)
+      setNotes(response.data)
+    })
 
-  
-  // const [counter,setCounter]= useState(0)
+  },[])
 
-  // const handleCounter = () =>{
-  //   setCounter(counter+1)
-  // }
+  const handleInputChange = (event) => {
+    console.log(event.target.value)
+    setNewNote(event.target.value)
+  }
 
+  const handleAdd = (event)=>{
+    event.preventDefault()
+    // alert('Testing...')
+  }
 
   return (
     <>
-   
-   {/* <h2>{counter}</h2>
-   <button onClick={handleCounter}>Plus</button> */}
-   {/* <Feedback_app/> */}
-   <History_app/>
-
+      <h2>Notes</h2>
+      <ul>
+        {notes.map(note =>
+        <li key ={note.id}>
+          {note.content}
+        </li>)}
+      </ul>
+      <form>
+        <input value={newNote} onChange={handleInputChange}/>
+        <button onClick={handleAdd}>add</button>
+      </form>
     </>
-    
+
 
   );
+
+
 }
 
 export default App;
